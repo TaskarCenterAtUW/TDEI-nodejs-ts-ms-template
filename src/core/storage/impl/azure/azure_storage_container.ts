@@ -1,4 +1,5 @@
 import { ContainerClient } from "@azure/storage-blob";
+import { StorageContainer } from "../../abstract/storage_container";
 import { AzureFileEntity } from "./azure_file_entity";
 
 export class AzureStorageContainer implements StorageContainer{

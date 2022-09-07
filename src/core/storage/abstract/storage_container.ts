@@ -1,5 +1,6 @@
+import { FileEntity } from "./file_entity";
 
- abstract class StorageContainer {
+ export abstract class StorageContainer {
 
     name:string
     constructor(name:string = ''){

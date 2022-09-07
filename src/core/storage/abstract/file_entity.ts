@@ -1,5 +1,5 @@
 
- abstract class FileEntity {
+ export abstract class FileEntity {
     fileName:string;
     mimeType:string;
     

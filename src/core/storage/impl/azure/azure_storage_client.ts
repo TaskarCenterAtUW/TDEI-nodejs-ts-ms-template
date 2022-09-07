@@ -1,4 +1,5 @@
 import { BlobServiceClient } from "@azure/storage-blob";
+import { StorageClient } from "../../abstract/storage_client";
 import { AzureStorageContainer } from "./azure_storage_container";
 
  export class AzureStorageClient implements StorageClient {

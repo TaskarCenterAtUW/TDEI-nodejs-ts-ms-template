@@ -1,8 +1,7 @@
-import { AzureFileEntity } from "./core/storage/impl/azure/azure_file_entity";
-import { AzureStorageClient } from "./core/storage/impl/azure/azure_storage_client";
-import { AzureStorageContainer } from "./core/storage/impl/azure/azure_storage_container";
+import { AzureStorageClient, FileEntity, StorageClient, StorageContainer } from "@core/storage";
 
 console.log('Hello');
+
 
 // export const STORAGE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=tdeisamplestorage;AccountKey=l9JSJCGq9NrXqRVKApSk1wwV27aWaOVuxeY0NWOZz2svIlJzyncr3UFTzLoAanFbmJIeb2WmwIcS+AStj5gELg==;EndpointSuffix=core.windows.net";
 const CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=tdeisamplestorage;AccountKey=l9JSJCGq9NrXqRVKApSk1wwV27aWaOVuxeY0NWOZz2svIlJzyncr3UFTzLoAanFbmJIeb2WmwIcS+AStj5gELg==;EndpointSuffix=core.windows.net";
