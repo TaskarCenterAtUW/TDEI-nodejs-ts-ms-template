@@ -1,6 +1,7 @@
 // Azure file entity to be written.
 
 import { BlockBlobClient } from "@azure/storage-blob";
+import { FileEntity } from "../../abstract/file_entity";
 
 export class AzureFileEntity implements FileEntity{
     fileName: string;
