@@ -114,3 +114,54 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+.terraform
+terraform-output.json
+*-plan.out
+*.tfstate
+
+# GH Actions Nektos ignore
+.secrets
+
+
+# compiled output
+/dist
+/libs/dist
+/tmp
+/out-tsc
+tsconfig.nx-tmp
+.nx-results
+
+#dependencies
+.npmrc
+/node_modules
