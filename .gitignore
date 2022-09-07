@@ -161,6 +161,7 @@ terraform-output.json
 /out-tsc
 tsconfig.nx-tmp
 .nx-results
+/build
 
 #dependencies
 .npmrc
