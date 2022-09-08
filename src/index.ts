@@ -1,6 +1,25 @@
-import { AzureStorageClient, FileEntity, StorageClient, StorageContainer } from "@core/storage";
+import { AbstractDomainEntity, Prop } from "./core/model";
+import { AzureStorageClient, FileEntity, StorageClient, StorageContainer } from "./core/storage";
 
 console.log('Hello');
+import sm from './assets/sample_message.json';
+// import { AbstractDomainEntity } from "./core/model/abstract-domain-entity";
+// import { Prop } from "./core/model/decorators/prop.decorator";
+
+
+class SampleModel extends AbstractDomainEntity{
+
+    @Prop()
+    public userid!: string;
+
+    @Prop()
+    public extraThing!: string
+
+    constructor() {
+        super();
+      }
+
+}
 
 
 // export const STORAGE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=tdeisamplestorage;AccountKey=l9JSJCGq9NrXqRVKApSk1wwV27aWaOVuxeY0NWOZz2svIlJzyncr3UFTzLoAanFbmJIeb2WmwIcS+AStj5gELg==;EndpointSuffix=core.windows.net";
@@ -24,6 +43,13 @@ async function testStorage(){
 }
 
 
-testStorage();
+function testModel(){
+    const singleMessage: SampleModel = SampleModel.from(sm);
+
+    console.log(" Single Message ");
+    console.log(singleMessage.userid);
+}
+testModel();
+// testStorage();
 
 
