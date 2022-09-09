@@ -23,6 +23,24 @@ export class AzureFileEntity implements FileEntity{
         return Promise.resolve(this.streamToText(stream));
     }
 
+    async upload(body: NodeJS.ReadableStream): Promise<FileEntity> {
+            const streamData = await this.streamToData(body);
+            // Have to set the content type
+            // const uploadOptions = new BlockBlobParallelUploadOptions()
+            const uploadOptions = {blobHTTPHeaders:{blobContentType:this.mimeType}};
+            const uploadResponse = await this._blobClient.uploadData(streamData,uploadOptions);
+            // uploadResponse.
+        return Promise.resolve(this);
+    }
+
+    async streamToData(stream:NodeJS.ReadableStream): Promise<Buffer> {
+        let chunks:Buffer[] = []
+        for await (const chunk of stream){
+            chunks.push(chunk as Buffer);
+        }
+        return Buffer.concat(chunks);
+    }
+
     private async streamToText(stream:NodeJS.ReadableStream):Promise<string>{
             stream.setEncoding('utf8');
             let data = '';
