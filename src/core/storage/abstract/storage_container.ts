@@ -9,5 +9,5 @@ import { FileEntity } from "./file_entity";
     abstract listFiles():Promise<FileEntity[]>;
     // May be list other directories as well.
     // will pick it up later.
-
+    abstract createFile(name:string,mimeType:string):FileEntity;
  }

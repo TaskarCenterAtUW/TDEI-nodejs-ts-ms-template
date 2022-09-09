@@ -10,5 +10,6 @@
     
     abstract getStream(): Promise<NodeJS.ReadableStream>; // Fetches the readable stream
     abstract getBodyText():Promise<string>; // Fetches the text for the file. Will show up only when needed.
+    abstract upload(body:NodeJS.ReadableStream) : Promise<FileEntity>;
 
  }

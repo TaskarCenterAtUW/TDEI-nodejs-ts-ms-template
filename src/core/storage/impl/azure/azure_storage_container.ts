@@ -1,4 +1,5 @@
 import { ContainerClient } from "@azure/storage-blob";
+import { FileEntity } from "../../abstract/file_entity";
 import { StorageContainer } from "../../abstract/storage_container";
 import { AzureFileEntity } from "./azure_file_entity";
 
@@ -26,7 +27,11 @@ export class AzureStorageContainer implements StorageContainer{
              resolve(fileEntities);
 
        });
-      
+    }
+    createFile(name: string, mimeType: string = 'text/plain'): AzureFileEntity {
+      const blobClient = this._client.getBlockBlobClient(name);
+      return new AzureFileEntity(name,blobClient,mimeType);
+       
     }
 
 }

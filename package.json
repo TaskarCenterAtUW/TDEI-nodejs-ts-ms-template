@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf ./build && tsc",
-    "start": "npm run build && node build/index.js",
-    "start:dev": "nodemon"
+    "start": "npm run build  && npm run copy:assets && node build/index.js",
+    "start:dev": "nodemon",
+    "copy:assets": "cp -r 'src/assets/' 'build/assets/'"
   },
   "keywords": [],
   "author": "",
