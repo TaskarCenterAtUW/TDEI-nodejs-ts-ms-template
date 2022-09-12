@@ -4,7 +4,7 @@ import 'reflect-metadata';
 // Down the lane, the parameter has to change to a class
 // This way, the conversion of the event to respective class can
 // be easily handled
-export function when(eventName:string) {
+export function When(eventName:string) {
     // console.log("first(): factory evaluated");
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const eventHandlerMap = Reflect.getMetadata('eventHandlers', target) || new Map();
