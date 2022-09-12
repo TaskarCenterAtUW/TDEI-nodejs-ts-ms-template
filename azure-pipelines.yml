@@ -6,7 +6,9 @@
 trigger:
 - master
 
-pool: TDEI-Agent-pool
+pool: 
+  name: TDEI-Agent-pool
+
 
 steps:
 - task: NodeTool@0
