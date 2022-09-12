@@ -6,8 +6,7 @@
 trigger:
 - master
 
-pool:
-  vmImage: linux
+pool: TDEI-Agent-pool
 
 steps:
 - task: NodeTool@0
