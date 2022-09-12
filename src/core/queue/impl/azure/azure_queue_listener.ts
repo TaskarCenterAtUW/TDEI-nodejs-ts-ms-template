@@ -5,20 +5,23 @@ import { QueueMessage } from "../../abstract/queue_message";
 
 export class AzureQueueListener {
 
-    private sbClient : ServiceBusClient;// = new ServiceBusClient(CONNECTION_STRING);
+    private sbClient : ServiceBusClient;
     private listener : ServiceBusReceiver;
 
     constructor(private connectionString:string, private queueName:string, private shouldComplete = true){
         this.sbClient = new ServiceBusClient(connectionString);
         this.listener = this.sbClient.createReceiver(queueName);
+        // this.listen();
+    }
+
+    public startListening(){
         this.listen();
     }
 
-
     private async listen(){
         this.listener.receiveMessages(1).then((messages)=>{
-            messages.forEach((singleMessage) => {
-                this.on(singleMessage);
+            messages.forEach(async (singleMessage) => {
+              await  this.on(singleMessage);
             });
             // Listen to it again.
             this.listen();
@@ -30,7 +33,7 @@ export class AzureQueueListener {
         // Get the type and start figuring out.
         const body = message.body;
         // console.log(body['type']);
-        const messageType = body['type'];
+        const messageType = body['messageType'];
         // Check if there is any method listening to it.
         const eventMap = Reflect.getMetadata('eventHandlers', this.constructor.prototype) as Map<
         string,
