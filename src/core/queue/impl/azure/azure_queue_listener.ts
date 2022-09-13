@@ -46,7 +46,9 @@ export class AzureQueueListener extends Loggable {
         if(eventHandlers != undefined){
             // Generate Queuemessage
             const queueMessage =  QueueMessage.from(body); //TODO: Parse based on the message type
+            console.log('Received Message raw body', { body: body });
             this.logger?.recordMessage(queueMessage,false);
+            console.debug('Help me');
       for (const{handler} of eventHandlers){
 
         handler.call(this,queueMessage);

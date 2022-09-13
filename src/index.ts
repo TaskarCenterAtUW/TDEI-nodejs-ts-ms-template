@@ -106,9 +106,12 @@ function testLogs(){
 // client.trackRequest({name:"GET /customers", url:"http://tdei.com/customers", duration:309, resultCode:200, success:true});
 // client.flush();
     let tdeiLogger = new TDEILogger("InstrumentationKey=f98ba6d5-58e1-4267-827e-ccac68caf50f;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/;LiveEndpoint=https://westus2.livediagnostics.monitor.azure.com/");
+    console.log("Sample event");
+    tdeiLogger.recordMetric('user-upload-gtfs',1);
+    tdeiLogger.sendAll();
 
 }
-// testQueues();
+testLogs();
 // testQueues();
 // testModel();
 // testStorageUpload();
