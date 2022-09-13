@@ -1,5 +1,5 @@
-import { TDEILogger } from "./tdei_logger";
+import { Logger } from "./abstract/logger";
 
 export class Loggable {
-     logger?:TDEILogger;
+     logger?:Logger;
 }

@@ -25,7 +25,7 @@ export class AzureSender  extends Loggable implements Sender{
       await  this.sender.sendMessages(messagesToSend);
       // Send a log to insights.
       messages.forEach((singleMessage)=>{
-        this.logger?.recordMessage(singleMessage);
+        this.logger?.recordMessage(singleMessage,true);
       });
       
     }
