@@ -1,11 +1,12 @@
 import { QueueMessage } from "../queue";
 
 import * as appInsights from 'applicationinsights';
+import { Logger } from "./abstract/logger";
 /**
  * Default queue message logger 
  * This is implemented for Azure only and can be moved to separate orchestration
  */
-export class TDEILogger {
+export class TDEILogger implements Logger {
 
     private client: appInsights.TelemetryClient;
 
