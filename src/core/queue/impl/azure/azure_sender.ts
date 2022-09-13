@@ -1,15 +1,17 @@
 import { ServiceBusClient, ServiceBusMessage, ServiceBusSender } from "@azure/service-bus";
+import { Loggable } from "../../../logger/loggable";
 import { QueueMessage } from "../../abstract/queue_message";
 import { Sender } from "../../abstract/sender";
 
 // class to send the messages to Azure queue
-export class AzureSender implements Sender{
+export class AzureSender  extends Loggable implements Sender{
 
     private sbClient : ServiceBusClient;
     private sender : ServiceBusSender;
     private currentMessages: QueueMessage[] = [];
 
     constructor(private connectionString:string,private queueName: string){
+        super();
         this.sbClient = new ServiceBusClient(connectionString);
         this.sender = this.sbClient.createSender(queueName);
     }
@@ -19,8 +21,13 @@ export class AzureSender implements Sender{
         const messagesToSend: ServiceBusMessage[] = []
         messages.forEach((singleMessage)=>{
             messagesToSend.push({body:singleMessage});
-        })
+        });
       await  this.sender.sendMessages(messagesToSend);
+      // Send a log to insights.
+      messages.forEach((singleMessage)=>{
+        this.logger?.recordMessage(singleMessage);
+      });
+      
     }
 
     add(message: QueueMessage) {
