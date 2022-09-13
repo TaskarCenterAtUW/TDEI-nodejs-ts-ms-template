@@ -7,6 +7,8 @@ console.log('Hello');
 import sm from './assets/sample_message.json';
 import { AzureQueueListener, AzureSender, QueueMessage } from "./core/queue";
 import { SampleQueueReceiver } from "./sample_queue_receiver";
+import * as appInsights from 'applicationinsights';
+import { TDEILogger } from "./core/logger/tdei_logger";
 // import { AbstractDomainEntity } from "./core/model/abstract-domain-entity";
 // import { Prop } from "./core/model/decorators/prop.decorator";
 
@@ -65,10 +67,15 @@ function testModel(){
 
 
 function testQueues(){
+
+    let tdeiLogger = new TDEILogger("InstrumentationKey=f98ba6d5-58e1-4267-827e-ccac68caf50f;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/;LiveEndpoint=https://westus2.livediagnostics.monitor.azure.com/");
+
     const queueName = "tdei-poc-queue"; 
     
     const sender = new AzureSender(QUEUE_CONNECTION_STRING,queueName);
+    sender.logger = tdeiLogger;
     const myListener = new SampleQueueReceiver(QUEUE_CONNECTION_STRING,queueName);
+    myListener.logger = tdeiLogger;
     myListener.startListening();
     // Create and send events
 
@@ -80,8 +87,32 @@ for(var i=0;i<numberOfMessages;i++){
     allMessages.push(queueMessage);
 }
     sender.send(allMessages);
+    tdeiLogger.sendAll();
 }
-testQueues();
+
+function testLogs(){
+    // let appInsights = require("applicationinsights");
+    // appInsights
+// console.log("Setting up ",Date.now());
+// appInsights.setup("InstrumentationKey=f98ba6d5-58e1-4267-827e-ccac68caf50f;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/;LiveEndpoint=https://westus2.livediagnostics.monitor.azure.com/")
+// .setAutoCollectConsole(true,true)
+// .start();
+// console.log("Setting up done",Date.now());
+// let client = appInsights.defaultClient;
+// console.log("Sending event ",Date.now());
+// client.trackEvent({name:"template-event",properties:{eventType:"sampleevent",message:'Sample message'}});
+// console.log("Sent event ",Date.now());
+
+// client.trackRequest({name:"GET /customers", url:"http://tdei.com/customers", duration:309, resultCode:200, success:true});
+// client.flush();
+    let tdeiLogger = new TDEILogger("InstrumentationKey=f98ba6d5-58e1-4267-827e-ccac68caf50f;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/;LiveEndpoint=https://westus2.livediagnostics.monitor.azure.com/");
+    console.log("Sample event");
+    tdeiLogger.recordMetric('user-upload-gtfs',1);
+    tdeiLogger.sendAll();
+
+}
+testLogs();
+// testQueues();
 // testModel();
 // testStorageUpload();
 // testStorage();

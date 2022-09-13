@@ -1,14 +1,16 @@
 // Listener code to be added.
 
 import { ServiceBusClient, ServiceBusReceivedMessage, ServiceBusReceiver } from "@azure/service-bus";
+import { Loggable } from "../../../logger/loggable";
 import { QueueMessage } from "../../abstract/queue_message";
 
-export class AzureQueueListener {
+export class AzureQueueListener extends Loggable {
 
     private sbClient : ServiceBusClient;
     private listener : ServiceBusReceiver;
 
     constructor(private connectionString:string, private queueName:string, private shouldComplete = true){
+        super();
         this.sbClient = new ServiceBusClient(connectionString);
         this.listener = this.sbClient.createReceiver(queueName);
         // this.listen();
@@ -44,6 +46,9 @@ export class AzureQueueListener {
         if(eventHandlers != undefined){
             // Generate Queuemessage
             const queueMessage =  QueueMessage.from(body); //TODO: Parse based on the message type
+            console.log('Received Message raw body', { body: body });
+            this.logger?.recordMessage(queueMessage,false);
+            console.debug('Help me');
       for (const{handler} of eventHandlers){
 
         handler.call(this,queueMessage);
