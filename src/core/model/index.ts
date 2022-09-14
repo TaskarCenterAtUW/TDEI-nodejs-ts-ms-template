@@ -1,9 +1,8 @@
 export { AbstractDomainEntity } from './abstract-domain-entity';
-// export { AbstractDomainModelConstructor } from './abstract-domain-model-constructor';
 
 // General purpose decorators
 export { Prop } from './decorators/prop.decorator';
-// export { UUID } from './decorators/uuid.decorator';
+// export { UUID } from './decorators/uuid.decorator'; // To be put up
 // export { JsonIgnore } from './decorators/json-ignore.decorator';
 // export { JsonIgnoreNull } from './decorators/json-ignore-null.decorator';
 // export { JsonAlias } from './decorators/json-alias.decorator';

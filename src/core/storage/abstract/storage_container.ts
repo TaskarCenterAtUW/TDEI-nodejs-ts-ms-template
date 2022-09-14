@@ -1,13 +1,32 @@
 import { FileEntity } from "./file_entity";
 
- export abstract class StorageContainer {
+/**
+ * Abstract class for Storage Container
+ */
+export abstract class StorageContainer {
 
-    name:string
-    constructor(name:string = ''){
+    name: string
+
+    /**
+     * Creates an instance of Storage Container
+     * @param name name of the container (defaults to empty)
+     */
+    constructor(name: string = '') {
         this.name = name;
     }
-    abstract listFiles():Promise<FileEntity[]>;
-    // May be list other directories as well.
-    // will pick it up later.
-    abstract createFile(name:string,mimeType:string):FileEntity;
- }
+
+    /**
+     * Method to list the 
+     * 
+     * @returns list of FileEntity objects
+     */
+    abstract listFiles(): Promise<FileEntity[]>;
+
+    /**
+     * Creates a file entity object within the container.
+     * 
+     * @param name name of the file
+     * @param mimeType mime-type of the file
+     */
+    abstract createFile(name: string, mimeType: string): FileEntity;
+}

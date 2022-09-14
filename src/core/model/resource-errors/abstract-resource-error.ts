@@ -11,6 +11,9 @@ export type ResourceErrorPayload = {
   errors?: ResourceErrorPayloadItem[];
 } & { [key: string]: LogPrim };
 
+/**
+ * Base interface for Resource error response
+ */
 export interface ResourceErrorResponseBody {
   status: number;
   code: string;
@@ -19,6 +22,9 @@ export interface ResourceErrorResponseBody {
   awsRequestId?: string;
 }
 
+/**
+ * Base class for Resource error
+ */
 export abstract class AbstractResourceError extends Error {
   public readonly status: number;
   public readonly body: ResourceErrorResponseBody;
