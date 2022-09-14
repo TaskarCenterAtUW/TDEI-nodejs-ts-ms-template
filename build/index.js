@@ -44,7 +44,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.QUEUE_CONNECTION_STRING = void 0;
 const model_1 = require("./core/model");
 const storage_1 = require("./core/storage");
 const fs = __importStar(require("fs"));
@@ -54,6 +53,7 @@ const sample_message_json_1 = __importDefault(require("./assets/sample_message.j
 const queue_1 = require("./core/queue");
 const sample_queue_receiver_1 = require("./sample_queue_receiver");
 const tdei_logger_1 = require("./core/logger/tdei_logger");
+const environment_1 = require("./environment/environment");
 // import { AbstractDomainEntity } from "./core/model/abstract-domain-entity";
 // import { Prop } from "./core/model/decorators/prop.decorator";
 class SampleModel extends model_1.AbstractDomainEntity {
@@ -70,10 +70,10 @@ __decorate([
     __metadata("design:type", String)
 ], SampleModel.prototype, "extraThing", void 0);
 // export const STORAGE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=tdeisamplestorage;AccountKey=l9JSJCGq9NrXqRVKApSk1wwV27aWaOVuxeY0NWOZz2svIlJzyncr3UFTzLoAanFbmJIeb2WmwIcS+AStj5gELg==;EndpointSuffix=core.windows.net";
-const CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=tdeisamplestorage;AccountKey=l9JSJCGq9NrXqRVKApSk1wwV27aWaOVuxeY0NWOZz2svIlJzyncr3UFTzLoAanFbmJIeb2WmwIcS+AStj5gELg==;EndpointSuffix=core.windows.net";
-const containerName = 'tdei-storage-test';
+const CONNECTION_STRING = environment_1.environment.connections.blobStorage;
+const containerName = environment_1.environment.blobContainerName;
 const azureStorageClient = new storage_1.AzureStorageClient(CONNECTION_STRING);
-exports.QUEUE_CONNECTION_STRING = "Endpoint=sb://tdei-sample.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=4UNDrVpThcnbqWlGFFQEcivuPlvMMWcSHwbyHgEv+rg=";
+// export const QUEUE_CONNECTION_STRING = "Endpoint=sb://tdei-sample.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=4UNDrVpThcnbqWlGFFQEcivuPlvMMWcSHwbyHgEv+rg=";
 function testStorage() {
     return __awaiter(this, void 0, void 0, function* () {
         const azureContainerClient = yield azureStorageClient.getContainer(containerName);
@@ -100,11 +100,11 @@ function testModel() {
     console.log(singleMessage.userid);
 }
 function testQueues() {
-    let tdeiLogger = new tdei_logger_1.TDEILogger("InstrumentationKey=f98ba6d5-58e1-4267-827e-ccac68caf50f;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/;LiveEndpoint=https://westus2.livediagnostics.monitor.azure.com/");
-    const queueName = "tdei-poc-queue";
-    const sender = new queue_1.AzureSender(exports.QUEUE_CONNECTION_STRING, queueName);
+    let tdeiLogger = new tdei_logger_1.TDEILogger(environment_1.environment.connections.appInsights);
+    const queueName = environment_1.environment.queueName; //"tdei-poc-queue"; 
+    const sender = new queue_1.AzureSender(environment_1.environment.connections.serviceBus, queueName);
     sender.logger = tdeiLogger;
-    const myListener = new sample_queue_receiver_1.SampleQueueReceiver(exports.QUEUE_CONNECTION_STRING, queueName);
+    const myListener = new sample_queue_receiver_1.SampleQueueReceiver(environment_1.environment.connections.serviceBus, queueName);
     myListener.logger = tdeiLogger;
     myListener.startListening();
     // Create and send events
@@ -132,13 +132,14 @@ function testLogs() {
     // console.log("Sent event ",Date.now());
     // client.trackRequest({name:"GET /customers", url:"http://tdei.com/customers", duration:309, resultCode:200, success:true});
     // client.flush();
-    let tdeiLogger = new tdei_logger_1.TDEILogger("InstrumentationKey=f98ba6d5-58e1-4267-827e-ccac68caf50f;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/;LiveEndpoint=https://westus2.livediagnostics.monitor.azure.com/");
+    let tdeiLogger = new tdei_logger_1.TDEILogger(environment_1.environment.connections.appInsights);
     console.log("Sample event");
     tdeiLogger.recordMetric('user-upload-gtfs', 1);
     tdeiLogger.sendAll();
 }
-testLogs();
+// testLogs();
 // testQueues();
 // testModel();
 // testStorageUpload();
 // testStorage();
+// console.log(process.env.npm_package_name);

@@ -9,6 +9,7 @@ import { AzureQueueListener, AzureSender, QueueMessage } from "./core/queue";
 import { SampleQueueReceiver } from "./sample_queue_receiver";
 import * as appInsights from 'applicationinsights';
 import { TDEILogger } from "./core/logger/tdei_logger";
+import { environment } from "./environment/environment";
 // import { AbstractDomainEntity } from "./core/model/abstract-domain-entity";
 // import { Prop } from "./core/model/decorators/prop.decorator";
 
@@ -29,11 +30,11 @@ class SampleModel extends AbstractDomainEntity{
 
 
 // export const STORAGE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=tdeisamplestorage;AccountKey=l9JSJCGq9NrXqRVKApSk1wwV27aWaOVuxeY0NWOZz2svIlJzyncr3UFTzLoAanFbmJIeb2WmwIcS+AStj5gELg==;EndpointSuffix=core.windows.net";
-const CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=tdeisamplestorage;AccountKey=l9JSJCGq9NrXqRVKApSk1wwV27aWaOVuxeY0NWOZz2svIlJzyncr3UFTzLoAanFbmJIeb2WmwIcS+AStj5gELg==;EndpointSuffix=core.windows.net";
-const containerName = 'tdei-storage-test';
+const CONNECTION_STRING = environment.connections.blobStorage;
+const containerName =  environment.blobContainerName;
 const azureStorageClient: StorageClient = new AzureStorageClient(CONNECTION_STRING);
 
-export const QUEUE_CONNECTION_STRING = "Endpoint=sb://tdei-sample.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=4UNDrVpThcnbqWlGFFQEcivuPlvMMWcSHwbyHgEv+rg=";
+// export const QUEUE_CONNECTION_STRING = "Endpoint=sb://tdei-sample.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=4UNDrVpThcnbqWlGFFQEcivuPlvMMWcSHwbyHgEv+rg=";
 
 
 async function testStorage(){
@@ -68,13 +69,13 @@ function testModel(){
 
 function testQueues(){
 
-    let tdeiLogger = new TDEILogger("InstrumentationKey=f98ba6d5-58e1-4267-827e-ccac68caf50f;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/;LiveEndpoint=https://westus2.livediagnostics.monitor.azure.com/");
+    let tdeiLogger = new TDEILogger(environment.connections.appInsights);
 
-    const queueName = "tdei-poc-queue"; 
+    const queueName = environment.queueName;//"tdei-poc-queue"; 
     
-    const sender = new AzureSender(QUEUE_CONNECTION_STRING,queueName);
+    const sender = new AzureSender(environment.connections.serviceBus,queueName);
     sender.logger = tdeiLogger;
-    const myListener = new SampleQueueReceiver(QUEUE_CONNECTION_STRING,queueName);
+    const myListener = new SampleQueueReceiver(environment.connections.serviceBus,queueName);
     myListener.logger = tdeiLogger;
     myListener.startListening();
     // Create and send events
@@ -105,16 +106,16 @@ function testLogs(){
 
 // client.trackRequest({name:"GET /customers", url:"http://tdei.com/customers", duration:309, resultCode:200, success:true});
 // client.flush();
-    let tdeiLogger = new TDEILogger("InstrumentationKey=f98ba6d5-58e1-4267-827e-ccac68caf50f;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/;LiveEndpoint=https://westus2.livediagnostics.monitor.azure.com/");
+    let tdeiLogger = new TDEILogger(environment.connections.appInsights);
     console.log("Sample event");
     tdeiLogger.recordMetric('user-upload-gtfs',1);
     tdeiLogger.sendAll();
 
 }
-testLogs();
+// testLogs();
 // testQueues();
 // testModel();
 // testStorageUpload();
 // testStorage();
-
+// console.log(process.env.npm_package_name);
 
