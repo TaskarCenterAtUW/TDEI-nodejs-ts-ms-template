@@ -18,15 +18,14 @@ export class TDEILogger implements Logger {
         // Need to put the microservice name somewhere here.
     }
 
-    recordMessage(message: QueueMessage,published:boolean = true) {
+    recordMessage(message: QueueMessage, published: boolean = true) {
         // Get the internal thing and send the message
-        const eventAction = published?'Published':'Received'; //TODO: Move to some constants.
-        this.client.trackEvent({name:message.messageType,properties:{content:message.message,eventAction:eventAction}});
-        // this.client.track({properties:{itemType:'SuperEvent',name:message.messageType+" mine",eventAction:eventAction}},appInsights.Contracts.TelemetryType.Event);
+        const eventAction = published ? 'Published' : 'Received'; //TODO: Move to some constants.
+        this.client.trackEvent({ name: message.messageType, properties: { content: message.message, eventAction: eventAction } });
     }
 
-    recordMetric(name:string,value:number){
-        this.client.trackMetric({name:name,value:value});
+    recordMetric(name: string, value: number) {
+        this.client.trackMetric({ name: name, value: value });
     }
 
     sendAll() {

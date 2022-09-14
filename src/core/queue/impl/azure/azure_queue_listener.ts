@@ -4,18 +4,44 @@ import { ServiceBusClient, ServiceBusReceivedMessage, ServiceBusReceiver } from 
 import { Loggable } from "../../../logger/loggable";
 import { QueueMessage } from "../../abstract/queue_message";
 
+/**
+ * Base class for all the Queue Listening activities.
+ * This class is base queue listener for all the Azure 
+ * based cloud system.
+ * 
+ * Use @When() decorator to declare the event you want to 
+ * listen to.
+ * 
+ * @Example
+ * ```typescript
+ *   export class SampleQueueReceiver extends AzureQueueListener {
+ *    @When('sampleevent')
+ *    public onSampleEvent(message: QueueMessage) {
+ *      }
+ *    }
+ *  ```
+ * 
+ */
 export class AzureQueueListener extends Loggable {
 
     private sbClient : ServiceBusClient;
     private listener : ServiceBusReceiver;
 
+    /**
+     * Constructor for the queue listener
+     * @param connectionString Connection string for the Azure Service Bus
+     * @param queueName Name of the queue
+     * @param shouldComplete Whether the message should be completed after receiving (defaults to true)
+     */
     constructor(private connectionString:string, private queueName:string, private shouldComplete = true){
         super();
         this.sbClient = new ServiceBusClient(connectionString);
         this.listener = this.sbClient.createReceiver(queueName);
-        // this.listen();
     }
 
+    /**
+     * start listening to the queue
+     */
     public startListening(){
         this.listen();
     }
