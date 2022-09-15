@@ -33,4 +33,11 @@ export abstract class Logger {
      */
     abstract sendAll();
 
+    /**
+     * Record a request into the logger
+     * @param req Request object
+     * @param res Response object
+     */
+    abstract recordRequest(req:any,res:any);
+
 }
