@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf ./build && tsc",
     "start": "npm run build  && npm run copy:assets && node build/index.js",
+    "serve": "npm run build  && npm run copy:assets && node build/app.js",
     "start:dev": "nodemon",
     "copy:assets": "cp -r 'src/assets/' 'build/assets/'"
   },
@@ -27,6 +28,8 @@
     "applicationinsights": "^2.3.4",
     "date-fns": "^2.29.2",
     "koa": "^2.13.4",
+    "koa-json": "^2.0.2",
+    "koa-router": "^12.0.0",
     "lodash": "^4.17.21",
     "reflect-metadata": "^0.1.13"
   }

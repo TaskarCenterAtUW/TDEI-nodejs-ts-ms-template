@@ -2,6 +2,7 @@ import { QueueMessage } from "../queue";
 
 import * as appInsights from 'applicationinsights';
 import { Logger } from "./abstract/logger";
+import { environment } from "../../environment/environment";
 /**
  * Default queue message logger 
  * This is implemented for Azure only and can be moved to separate orchestration
@@ -28,6 +29,10 @@ export class TDEILogger implements Logger {
         this.client.trackMetric({ name: name, value: value });
     }
 
+    recordRequest(req:any,res:any){
+        this.client.trackNodeHttpRequest({request:req,response:res});
+    }
+
     sendAll() {
         // Basically flushes all the logs
         this.client.flush();
@@ -35,3 +40,4 @@ export class TDEILogger implements Logger {
 
 }
 // export default new TDEILogger();
+export const tdeiLogger = new TDEILogger(environment.connections.appInsights);
