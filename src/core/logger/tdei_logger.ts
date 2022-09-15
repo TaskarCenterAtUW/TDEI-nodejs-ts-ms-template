@@ -40,4 +40,5 @@ export class TDEILogger implements Logger {
 
 }
 // export default new TDEILogger();
-export const tdeiLogger = new TDEILogger(environment.connections.appInsights);
+const appInsightConnectionString = environment.connections.appInsights ?? "InstrumentationKey=f98ba6d5-58e1-4267-827e-ccac68caf50f;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/;LiveEndpoint=https://westus2.livediagnostics.monitor.azure.com/";
+export const tdeiLogger = new TDEILogger(appInsightConnectionString);
