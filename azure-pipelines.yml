@@ -48,11 +48,11 @@ steps:
 #     artifactName: npm
 #   displayName: 'Publish npm artifact'
 
-#- task: AzureRmWebAppDeployment@4
-#   inputs:
-#     ConnectionType: 'AzureRM'
-#     azureSubscription: 'Azure-TDEI_GaussianRG'
-#     appType: 'webAppLinux'
-#     WebAppName: 'tdei-sample-template'
-#     packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
-#     RuntimeStack: 'NODE|16-lts'
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure-TDEI_GaussianRG'
+    appType: 'webAppLinux'
+    WebAppName: 'tdei-sample-template'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    RuntimeStack: 'NODE|16-lts'
