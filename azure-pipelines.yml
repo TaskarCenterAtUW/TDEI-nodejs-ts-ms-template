@@ -21,11 +21,16 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
-- task: AzureRmWebAppDeployment@4
+- task: PublishBuildArtifacts@1
   inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Azure-TDEI_GaussianRG'
-    appType: 'webAppLinux'
-    WebAppName: 'tdei-sample-template'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
-    RuntimeStack: 'NODE|16-lts'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+#- task: AzureRmWebAppDeployment@4
+#   inputs:
+#     ConnectionType: 'AzureRM'
+#     azureSubscription: 'Azure-TDEI_GaussianRG'
+#     appType: 'webAppLinux'
+#     WebAppName: 'tdei-sample-template'
+#     packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+#     RuntimeStack: 'NODE|16-lts'
