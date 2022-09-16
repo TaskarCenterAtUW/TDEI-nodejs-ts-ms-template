@@ -7,8 +7,19 @@ import { FileEntity } from "../../abstract/file_entity";
  * Azure implementation of FileEntity
  */
 export class AzureFileEntity implements FileEntity {
+    /**
+     * Name of the file
+     *  */ 
     fileName: string;
+
+    /**
+     * Type of the file.
+     * Will be application/vnd if not provided.
+     * Specify `text/plain` for txt files
+     */
     mimeType: string;
+
+    
     _blobClient: BlockBlobClient;
 
     constructor(name: string, blobClient: BlockBlobClient, mimeType: string = 'text/plain') {
