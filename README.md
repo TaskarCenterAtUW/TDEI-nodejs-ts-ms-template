@@ -200,4 +200,12 @@ This folder holds any of the example or local files that are used for either inp
 NOTE:
     
     All the examples are available in `examples.ts` file and can be tested independently when needed.
-        
+
+# Common tasks
+
+## Starting a new project with template
+1. Clone the repository.
+2. Remove the `.git` files using the command `rm -rf .git`
+3. Add your custom code to `index.ts`
+4. Add additional code and folders as necessary.
+5. Donot modify `core` directory.
