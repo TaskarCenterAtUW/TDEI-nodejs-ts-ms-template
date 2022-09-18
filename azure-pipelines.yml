@@ -11,6 +11,11 @@ pool:
   name: TDEI-Agent-pool
 
 
+variables:
+ - group: 'New variable group 18-Sep'
+ - name : va
+   value: $[variables.appInsights]
+
 steps:
 - task: NodeTool@0
   inputs:
@@ -21,6 +26,10 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
+  
+- script: 
+    echo "Variable VA = $(va)"
+    echo " -->  <--" 
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(Build.Repository.LocalPath)'
@@ -28,25 +37,6 @@ steps:
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
-# - task: CopyFiles@2
-#   inputs:
-#     sourceFolder: '$(Build.SourcesDirectory)'
-#     contents: '*.tgz' 
-#     targetFolder: $(Build.ArtifactStagingDirectory)/npm
-#   displayName: 'Copy npm package'
-
-# - task: CopyFiles@2
-#   inputs:
-#     sourceFolder: '$(Build.SourcesDirectory)'
-#     contents: 'package.json' 
-#     targetFolder: $(Build.ArtifactStagingDirectory)/npm
-#   displayName: 'Copy package.json'   
-
-# - task: PublishPipelineArtifact@1
-#   inputs:
-#     targetPath: '$(Build.ArtifactStagingDirectory)/npm'
-#     artifactName: npm
-#   displayName: 'Publish npm artifact'
 
 - task: AzureRmWebAppDeployment@4
   inputs:
@@ -56,3 +46,6 @@ steps:
     WebAppName: 'tdei-sample-template'
     packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     RuntimeStack: 'NODE|16-lts'
+
+
+
