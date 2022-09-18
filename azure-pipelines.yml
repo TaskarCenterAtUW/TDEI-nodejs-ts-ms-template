@@ -29,12 +29,7 @@ steps:
   
 - script: 
     echo "Variable VA = $(va)"
-    echo " -->  <--" 
-    echo "Local variable >>>> "
-    echo $MY_MAPPED_ENV_VAR
-    echo "<<<"
-  env:
-    MY_MAPPED_ENV_VAR : $(appInsight)
+    echo " -->  <--"
 
 # - task: ArchiveFiles@2
 #   inputs:
