@@ -30,6 +30,9 @@ steps:
 - script: 
     echo "Variable VA = $(va)"
     echo " -->  <--" 
+    echo "Local variable >>>> "
+    echo $(APPINSIGHT)
+    echo "<<<"
 
 # - task: ArchiveFiles@2
 #   inputs:
