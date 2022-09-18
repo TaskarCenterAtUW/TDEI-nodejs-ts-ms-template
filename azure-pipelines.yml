@@ -31,8 +31,10 @@ steps:
     echo "Variable VA = $(va)"
     echo " -->  <--" 
     echo "Local variable >>>> "
-    echo $(APPINSIGHT)
+    echo $(MY_MAPPED_ENV_VAR)
     echo "<<<"
+  env:
+    MY_MAPPED_ENV_VAR : $(APPINSIGHT)
 
 # - task: ArchiveFiles@2
 #   inputs:
