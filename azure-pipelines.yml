@@ -30,22 +30,23 @@ steps:
 - script: 
     echo "Variable VA = $(va)"
     echo " -->  <--" 
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(Build.Repository.LocalPath)'
-    includeRootFolder: false
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
 
-- task: AzureRmWebAppDeployment@4
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Azure-TDEI_GaussianRG'
-    appType: 'webAppLinux'
-    WebAppName: 'tdei-sample-template'
-    packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    RuntimeStack: 'NODE|16-lts'
+# - task: ArchiveFiles@2
+#   inputs:
+#     rootFolderOrFile: '$(Build.Repository.LocalPath)'
+#     includeRootFolder: false
+#     archiveType: 'zip'
+#     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+#     replaceExistingArchive: true
+
+# - task: AzureRmWebAppDeployment@4
+#   inputs:
+#     ConnectionType: 'AzureRM'
+#     azureSubscription: 'Azure-TDEI_GaussianRG'
+#     appType: 'webAppLinux'
+#     WebAppName: 'tdei-sample-template'
+#     packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+#     RuntimeStack: 'NODE|16-lts'
 
 
 
