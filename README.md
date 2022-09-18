@@ -11,6 +11,13 @@ The project is built on top of NodeJS framework. All the regular nuances for a N
 | Typescript | 4.8.2 |
 
 
+## Starting a new project with template
+1. Clone the repository.
+2. Remove the `.git` files using the command `rm -rf .git`
+3. Add your custom code to `index.ts`
+4. Add additional code and folders as necessary.
+5. Donot modify `core` directory.
+
 # Build and Test
 Follow the steps to install the node packages required for both building and running the application
 
@@ -203,9 +210,3 @@ NOTE:
 
 # Common tasks
 
-## Starting a new project with template
-1. Clone the repository.
-2. Remove the `.git` files using the command `rm -rf .git`
-3. Add your custom code to `index.ts`
-4. Add additional code and folders as necessary.
-5. Donot modify `core` directory.
