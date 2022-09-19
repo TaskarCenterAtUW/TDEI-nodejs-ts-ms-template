@@ -28,7 +28,7 @@ Follow the steps to install the node packages required for both building and run
 2. To start the server, use the command `npm run start`
 
 # Structure and components
-The application is a simple derivative of `koa` [server](https://koajs.com) based  to serve `http` requests. However, it also has other components that will be used on regular basis for the project. 
+The application is a simple derivative of [koa](https://koajs.com) to serve `http` requests. This code also has other components to communicate with cloud for storage, queues, logs, configurations etc. 
 
 ## Core
 Contains all the abstract and Azure implementation classes for connecting to Azure components. 
