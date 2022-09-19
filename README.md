@@ -26,9 +26,15 @@ Follow the steps to install the node packages required for both building and run
     npm install
     ```
 2. To start the server, use the command `npm run start`
+3. The http server by default starts with 3000 port or whatever is declared in `process.env.PORT` (look at `index.ts` for more details)
+4. By default `get` call on `localhost:3000` gives a sample response
+5. Other routes include a `ping` with get and post. Make `get` or `post` request to `http://localhost:3000/ping`
+
 
 # Structure and components
-The application is a simple derivative of [koa](https://koajs.com) to serve `http` requests. This code also has other components to communicate with cloud for storage, queues, logs, configurations etc. 
+The application is a simple derivative of [koa](https://koajs.com) to serve `http` requests. By default, the `bodyParser` and `json` parser are added to the application.
+
+This project also has other components to communicate with cloud for storage, queues, logs, configurations etc. 
 
 ## Core
 Contains all the abstract and Azure implementation classes for connecting to Azure components. 
@@ -57,6 +63,12 @@ tdeiLogger.recordMetric('userlogin',1); // Metric and value
 tdeiLogger.recordRequest(request,response);
 
 ```
+Note:
+
+* All the `debug`, `info`, `warn`, `error` logs can be logged with `console` and will be injected into appInsight traces.
+* All the requests of the application can be logged by using `requestLogger` (check `index.ts`). This acts as a middleware for logging all the requests
+* All the QueueMessages received and sent within the application are already logged. You may use the above methods just in case there is more information to be logged.
+
 
 ### Model
 Offers easy ways to define and parse the model classes from the JSON based input received from either HTTP request or from the queue message. This acts as the base for defining all the models. `AbstractDomainEntity` can be subclassed and used for all the models used within the project. This combined with `Prop()` decorator will make it easy for modelling.
@@ -209,4 +221,7 @@ NOTE:
     All the examples are available in `examples.ts` file and can be tested independently when needed.
 
 # Common tasks
+
+## Adding additional routes to the server
+
 
