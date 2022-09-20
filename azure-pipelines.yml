@@ -48,6 +48,7 @@ steps:
     packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     RuntimeStack: 'NODE|16-lts'
     StartupCommand: 'npm run publish'
+    AppSettings: '-AppInsights $(va)'
 
 
 
