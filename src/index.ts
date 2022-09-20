@@ -32,7 +32,7 @@ app.use(router.routes()).use(router.allowedMethods());
 
 const anotherRouter = new Router();
 anotherRouter.get('/ping',async (ctx,next) => {
-    ctx.body = {msg:'Ping successful'};
+    ctx.body = {msg:'Ping successful',envvars:process.env};
     await next();
 
 });
