@@ -47,6 +47,7 @@ steps:
     WebAppName: 'tdei-sample-template'
     packageForLinux: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     RuntimeStack: 'NODE|16-lts'
+    StartupCommand: 'npm run publish'
 
 
 
