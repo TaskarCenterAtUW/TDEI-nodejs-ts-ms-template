@@ -1,6 +1,7 @@
-import { AzureQueueListener, QueueMessage, When } from "./core/queue";
-
-export class SampleQueueReceiver extends AzureQueueListener{
+import { QueueMessage, When } from "./core/queue";
+import { TDEIQueueListener } from "./core/queue/impl/tdei_queue_listener";
+// gtfs-queue
+export class SampleQueueReceiver extends TDEIQueueListener{
 
 
     @When('sampleevent')
@@ -10,3 +11,13 @@ export class SampleQueueReceiver extends AzureQueueListener{
     }
 
 }
+
+// osw-queue
+
+// instance1 -> 'abc' -> 
+
+
+// instance2 -> 'def' -> 
+
+// sampleevent fired on 'abc' queue 
+// it should invoke the method `onSampleEvent` on instance1

@@ -1,15 +1,17 @@
 import { AbstractDomainEntity, Prop } from "./core/model";
-import { AzureStorageClient, FileEntity, StorageClient, StorageContainer } from "./core/storage";
+import { FileEntity, StorageClient, StorageContainer, TDEIStorageClient } from "./core/storage";
 import * as fs from 'fs';
 import * as path from 'path';
 
 console.log('Hello');
 import sm from './assets/sample_message.json';
-import { AzureQueueListener, AzureSender, QueueMessage } from "./core/queue";
+import { AzureSender, QueueMessage } from "./core/queue";
 import { SampleQueueReceiver } from "./sample_queue_receiver";
 import * as appInsights from 'applicationinsights';
 import { TDEILogger } from "./core/logger/tdei_logger";
 import { environment } from "./environment/environment";
+import { CloudConfig } from "./core/common/cloud_config";
+import { TDEISender } from "./core/queue/impl/tdei_sender";
 // import { AbstractDomainEntity } from "./core/model/abstract-domain-entity";
 // import { Prop } from "./core/model/decorators/prop.decorator";
 
@@ -32,7 +34,7 @@ class SampleModel extends AbstractDomainEntity{
 // export const STORAGE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=tdeisamplestorage;AccountKey=l9JSJCGq9NrXqRVKApSk1wwV27aWaOVuxeY0NWOZz2svIlJzyncr3UFTzLoAanFbmJIeb2WmwIcS+AStj5gELg==;EndpointSuffix=core.windows.net";
 const CONNECTION_STRING = environment.connections.blobStorage;
 const containerName =  environment.blobContainerName;
-const azureStorageClient: StorageClient = new AzureStorageClient(CONNECTION_STRING);
+const azureStorageClient: StorageClient = TDEIStorageClient.getStorageClient(new CloudConfig(CONNECTION_STRING)); //new AzureStorageClient(CONNECTION_STRING);
 
 // export const QUEUE_CONNECTION_STRING = "Endpoint=sb://tdei-sample.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=4UNDrVpThcnbqWlGFFQEcivuPlvMMWcSHwbyHgEv+rg=";
 
@@ -73,9 +75,9 @@ function testQueues(){
 
     const queueName = environment.queueName;//"tdei-poc-queue"; 
     
-    const sender = new AzureSender(environment.connections.serviceBus,queueName);
-    sender.logger = tdeiLogger;
+    const sender = TDEISender.getQueueSender(new CloudConfig(environment.connections.serviceBus),queueName) ;//new AzureSender(environment.connections.serviceBus,queueName);
     const myListener = new SampleQueueReceiver(environment.connections.serviceBus,queueName);
+    const myListener2 = new SampleQueueReceiver(environment.connections.serviceBus,queueName+'sds');
     myListener.logger = tdeiLogger;
     myListener.startListening();
     // Create and send events
