@@ -44,6 +44,7 @@ To start a project from scratch, developer will need to initialize a typescript 
 
 5. Create directory `src` in the same folder as tsconfig.json
 6. Create `index.ts` in `src` directory and start adding your code
+7. Add `nodets-ms-core` package using command `npm install nodets-ms-core`
 
 #### Build and Test
 1. Install the dependencies. Run the following command in terminal on the same directory as `package.json`
