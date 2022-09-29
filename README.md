@@ -36,11 +36,37 @@ To start a project from scratch, developer will need to initialize a typescript 
 1. Initiate a new nodejs project using command `npm init -y`
 2. Add typescript support using `npm install typescript --save-dev`
 3. Add typescript types using `npm install @types/node --save-dev`
+4. Add `rimraf` support for file modification `npm install rimraf --save-dev`
 4. Use the following command to initiate typescript configuration
 
-`npx tsc --init --rootDir src --outDir build \
+```shell
+npx tsc --init --rootDir src --outDir build \
 --esModuleInterop --resolveJsonModule --lib es6 \
---module commonjs --allowJs true --noImplicitAny true`
+--module commonjs --allowJs true --noImplicitAny true
+```
+
+The above command creates a file named `tsconfig.json` which is used for typescript configuration. Here is out it should look like
+```json
+{
+  "compilerOptions": {
+    
+    "target": "es2016",                                  
+    "lib": ["es6"],                                      
+    "module": "commonjs",                                
+    "rootDir": "src",                                    
+    "resolveJsonModule": true,                           
+    "allowJs": true,                                     
+    "outDir": "build",                                   
+    "esModuleInterop": true,                             
+    "forceConsistentCasingInFileNames": true,            
+    "strict": true,                                      
+    "noImplicitAny": true,                               
+    "skipLibCheck": true                                 
+  }
+}
+
+```
+If there are any issues with the command above, you may create this file manually as well.
 
 5. Create directory `src` in the same folder as tsconfig.json
 6. Create `index.ts` in `src` directory and start adding your code
@@ -51,7 +77,23 @@ To start a project from scratch, developer will need to initialize a typescript 
     ```shell
     npm install
     ```
-2. To run your custom code, use the command `npm run start`
+2. Configure the start command as follows in the `package.json` file.
+
+The following scripts will help in creating the start methods. Ensure that start script is configured as follows:
+```json
+{
+    // Other configurations in package.json
+    // ...
+
+"scripts": {
+    "build": "rimraf ./build && tsc",
+    "start": "npm run build && node build/index.js",
+  },
+}
+
+```
+
+3. To run your custom code, use the command `npm run start`
 
 # nodets-ms-core package Structure and components
 The application is a simple derivative of [koa](https://koajs.com) to serve `http` requests. By default, the `bodyParser` and `json` parser are added to the application.
