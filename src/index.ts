@@ -2,7 +2,7 @@
  * Reference for the application based controller.
  */
 
-import Koa from "koa";
+import Koa, { Middleware, ParameterizedContext } from "koa";
 import Router from 'koa-router';
 import json from "koa-json";
 import bodyparser from "koa-body-parser";
@@ -38,6 +38,22 @@ Core.initialize(Config.from({
         
     }
 }));
+const requestLogger = (): Middleware => async (
+    ctx: ParameterizedContext,
+    next: () => Promise<any>
+)=>{
+    const start = Date.now();
+    try {
+        console.debug('Request start', {method: ctx.method, url: ctx.url});
+        await next();
+    } finally {
+        const ms = Date.now() - start;
+        console.debug('Request End', {method:ctx.method, url:ctx.url,duration:ms});
+        const logger = Core.getLogger();
+        logger.recordRequest(ctx.request, ctx.response);
+    }
+}
+app.use(requestLogger());
 
 // app.use()
 
