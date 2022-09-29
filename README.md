@@ -12,12 +12,14 @@ The project is built on top of NodeJS framework. All the regular nuances for a N
 
 
 ## Starting a new project with template
+There are two ways to start a new project:
+### With this template code
 1. Clone the repository.
 2. Remove the `.git` files using the command `rm -rf .git`
 3. Add your custom code to `index.ts`
 4. Add additional code and folders as necessary.
 
-# Build and Test
+#### Build and Test
 Follow the steps to install the node packages required for both building and running the application
 
 1. Install the dependencies. Run the following command in terminal on the same directory as `package.json`
@@ -29,6 +31,26 @@ Follow the steps to install the node packages required for both building and run
 4. By default `get` call on `localhost:3000` gives a sample response
 5. Other routes include a `ping` with get and post. Make `get` or `post` request to `http://localhost:3000/ping`
 
+### Starting from scratch
+To start a project from scratch, developer will need to initialize a typescript project and import `nodets-ms-core` package 
+1. Initiate a new nodejs project using command `npm init -y`
+2. Add typescript support using `npm install typescript --save-dev`
+3. Add typescript types using `npm install @types/node --save-dev`
+4. Use the following command to initiate typescript configuration
+
+`npx tsc --init --rootDir src --outDir build \
+--esModuleInterop --resolveJsonModule --lib es6 \
+--module commonjs --allowJs true --noImplicitAny true`
+
+5. Create directory `src` in the same folder as tsconfig.json
+6. Create `index.ts` in `src` directory and start adding your code
+
+#### Build and Test
+1. Install the dependencies. Run the following command in terminal on the same directory as `package.json`
+    ```shell
+    npm install
+    ```
+2. To run your custom code, use the command `npm run start`
 
 # nodets-ms-core package Structure and components
 The application is a simple derivative of [koa](https://koajs.com) to serve `http` requests. By default, the `bodyParser` and `json` parser are added to the application.
