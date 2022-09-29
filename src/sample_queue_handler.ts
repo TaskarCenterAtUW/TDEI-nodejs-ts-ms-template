@@ -1,4 +1,3 @@
-// import { AzureQueueListener, QueueMessage, When } from "./core/queue";
 import {Queue , QueueMessage} from 'nodets-ms-core/lib/core/queue';
 import {When} from 'nodets-ms-core/lib/core/queue';
 

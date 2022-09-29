@@ -1,5 +1,5 @@
 # Introduction 
-This micro-service acts as template for creating all the new micro-services for TDEI project. The components and classes in this project can be re-used for all the other micro-services.
+This micro-service acts as example for creating all the new micro-services for TDEI project. The reference code can be used in other micro-services.
 
 # Getting Started
 The project is built on top of NodeJS framework. All the regular nuances for a NodeJS project are valid for this.
@@ -16,7 +16,6 @@ The project is built on top of NodeJS framework. All the regular nuances for a N
 2. Remove the `.git` files using the command `rm -rf .git`
 3. Add your custom code to `index.ts`
 4. Add additional code and folders as necessary.
-5. Donot modify `core` directory.
 
 # Build and Test
 Follow the steps to install the node packages required for both building and running the application
@@ -31,19 +30,51 @@ Follow the steps to install the node packages required for both building and run
 5. Other routes include a `ping` with get and post. Make `get` or `post` request to `http://localhost:3000/ping`
 
 
-# Structure and components
+# nodets-ms-core package Structure and components
 The application is a simple derivative of [koa](https://koajs.com) to serve `http` requests. By default, the `bodyParser` and `json` parser are added to the application.
 
-This project also has other components to communicate with cloud for storage, queues, logs, configurations etc. 
+This project also includes `nodets-ms-core` package to communicate with cloud for storage, queues, logs, configurations etc. 
 
 ## Core
-Contains all the abstract and Azure implementation classes for connecting to Azure components. 
+Contains all the abstract and Cloud implementation classes for connecting to Cloud components. Before using any of the components, call the initialize 
+method of `Core` to initialize the cloud components. 
+
+eg.
+```typescript
+Core.initialize(
+    Config.from({
+    provider: 'Azure', // Keep this as Azure only
+    cloudConfig: {
+        connectionString: {
+            appInsights: <connection string for AppInsights>,
+            serviceBus: <connection string for ServiceBus>,
+            blobStorage: <connection string for BlobStorage>
+        },
+
+    }
+})
+);
+
+```
+You can also use `environment` file to have the configuration stored appropriately throughout the project
+eg.
+```typescript
+export const environment = {
+    connections:{
+        serviceBus: "<connection string for ServiceBus>",
+        blobStorage:"<connection string for BlobStorage>",
+        appInsights:"<connection string for AppInsights>"
+    },
+    // Additional configuration as per need for microservice
+    queueName:"tdei-poc-queue",
+    blobContainerName:"tdei-storage-test",
+    appName: process.env.npm_package_name
+}
+```
 
 ### Logger
 Offers helper classes to help log the information.
-Use `tdeiLogger` to log the following
-
-`queueMessage`  : Message received or sent to Queues. This helps in keeping track of the messages received and sent from the queue.
+Use `Core.getLogger()` to log the following
 
 `metric`    : Any specific metric that needs to be recorded
 
@@ -51,10 +82,9 @@ Use `tdeiLogger` to log the following
 
 Eg.
 ```typescript
-import { tdeiLogger } from "./tdei_logger";
+import { Core } from 'nodets-ms-core/lib/core';
 
-// Record message
-tdeiLogger.recordMessage(queueMessage, true); // True if published and false if received
+let tdeiLogger = Core.getLogger();
 
 // Record a metric
 tdeiLogger.recordMetric('userlogin',1); // Metric and value
@@ -67,7 +97,6 @@ Note:
 
 * All the `debug`, `info`, `warn`, `error` logs can be logged with `console` and will be injected into appInsight traces.
 * All the requests of the application can be logged by using `requestLogger` (check `index.ts`). This acts as a middleware for logging all the requests
-* All the QueueMessages received and sent within the application are already logged. You may use the above methods just in case there is more information to be logged.
 
 
 ### Model
@@ -120,6 +149,13 @@ export class QueueMessage extends AbstractDomainEntity {
     @Prop()
     message:string | undefined;
 
+    /**
+     * Published Date for the queue message.
+     * Defaults to local time if not specified.
+     */
+    @Prop()
+    publishedDate:Date = new Date();
+
 }
 
 ```
@@ -129,28 +165,47 @@ Eg. @Validate, @UUID, @NestedModel
 These will help in easily modelling the classes along with the required validation.
 
 ### Queue
-Queue component offers easy way to listen to and send messages over Azure Queues.
+Queue component offers easy way to listen to and send messages over Cloud Queues.
 All the queue messages have to be derived from the base class `QueueMessage` which has some inherent properties that may be filled (eg. messageType is needed).
 
-#### Sending to queue
-Either subclass `AzureSender` class or use an instance of the same to send queueMessage to the Azure Queue.
+Core offers two methods to get a Queue Handler. A default one which can be used only to send messages and a customHandler which allows developer to listen to custom events/messages on the queue.
 
 ```typescript
-const sender = new AzureSender(environment.connections.serviceBus,'queueName');
-const queueMessage = QueueMessage.from({messageType:'sampleevent',messageId:''1,message:"Sample message"});
-sender.send([queueMessage]);
+// Default queueHandler
+const defaultQueueHandler = Core.getQueue('queueName');
+
+// Custom QueueHandler
+const customQueueHandler = Core.getCustomQueue<CustomQueueHandler>('queueName',CustomQueueHandler);
+//where
+class CustomQueueHandler extends Queue {
+
+}
 
 ```
-The `send` method accepts an array of `QueueMessage`. It is upto the developer to order the messages or send a single message.
+
+#### Sending to queue
+Either subclass `Queue` class or use an instance of the same to send queueMessage to the Cloud.
+
+```typescript
+const sender = Core.getQueue('queueName');
+const queueMessage = QueueMessage.from({messageType:'sampleevent',messageId:''1,message:"Sample message"});
+sender.add(queueMessage);
+sender.send();
+
+```
+The method `add` pushes the message to the pubish queue and the method `send` flushes the pending messages into the queue sequentially.
 
 #### Listening to queue
 
 Queue listening is done based on the eventtype (messagetype). This uses `When()` decorator to simplify the amount of code needed to write.
 
-Subclass `AzureQueueListener` and write your own implementation of the method to listen to the event.
+Subclass `Queue` and write your own implementation of the method to listen to the event.
 
 ```typescript
-class SampleQueueReceiver extends AzureQueueListener{
+import {Queue , QueueMessage} from 'nodets-ms-core/lib/core/queue';
+import {When} from 'nodets-ms-core/lib/core/queue';
+
+export class SampleQueueHandler extends Queue {
 
 
     @When('sampleevent')
@@ -162,22 +217,24 @@ class SampleQueueReceiver extends AzureQueueListener{
 }
 
 // Usage
-const myListener = new SampleQueueReceiver(environment.connections.serviceBus,'queueName');
-myListener.startListening(); // Start listening to the queue.
+const sampleQueueHandler = Core.getCustomQueue<SampleQueueHandler>('queueName',SampleQueueHandler);
+sampleQueueHandler.listen(); // Start listening to the queue.
+
+
 ```
 The above class instance will listen to the `sampleevent` message type and is called whenever the queue receives a message of `sampleevent` type.
 
 ### Storage
-For all the azure blobs and other storages, storage components will offer simple ways to upload/download and read the existing data.
+For all the Storage blobs and other storages, storage components will offer simple ways to upload/download and read the existing data.
 ```typescript
 // Create storage client
-const azureStorageClient: StorageClient = new AzureStorageClient(CONNECTION_STRING);
+const theStorageClient: StorageClient = Core.getStorageClient();
 
 // Get a container in the storage client
-const azureContainerClient: StorageContainer = await azureStorageClient.getContainer(containerName);
+const theContainerClient: StorageContainer = await theStorageClient.getContainer(containerName);
 
 // To get the list of files
-const filesList:FileEntity[] = await azureContainerClient.listFiles();
+const filesList:FileEntity[] = await theContainerClient.listFiles();
 
 ```
 There are two ways to fetch the content of the file.
@@ -187,9 +244,9 @@ There are two ways to fetch the content of the file.
 File upload is done only through read stream.
 ```typescript
 // Get the storage container
-const azureContainerClient: StorageContainer = await azureStorageClient.getContainer(containerName);
-    // Create an instance of `AzureFileEntity` with name and mime-type
-    const testFile = azureContainerClient.createFile('sample-file2.txt','text/plain');
+const theContainerClient: StorageContainer = await theStorageClient.getContainer(containerName);
+    // Create an instance of `FileEntity` with name and mime-type
+    const testFile = theContainerClient.createFile('sample-file2.txt','text/plain');
     // Get the read stream from the local file
     const readStream = fs.createReadStream(path.join(__dirname,"assets/sample_upload_file.txt"));
     // Call the upload method with the readstream.

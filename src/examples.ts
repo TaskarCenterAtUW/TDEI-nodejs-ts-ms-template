@@ -5,11 +5,13 @@ import * as path from 'path';
 import { Core } from 'nodets-ms-core/lib/core';
 import sm from './assets/sample_message.json';
 import { QueueMessage } from "nodets-ms-core/lib/core/queue";
-import { SampleQueueHandler } from "./sample_queue_receiver";
+import { SampleQueueHandler } from "./sample_queue_handler";
 import { environment } from "./environment/environment";
 import { Config } from "nodets-ms-core/lib/models";
 
-
+/**
+ * Sample Model class to test the domain entities
+ */
 class SampleModel extends AbstractDomainEntity {
 
     @Prop()
@@ -26,7 +28,7 @@ class SampleModel extends AbstractDomainEntity {
 
 // Configure the core initially
 Core.initialize(Config.from({
-    provider: 'Azure',
+    provider: 'Azure', // Keep it as Azure only
     cloudConfig: {
         connectionString: {
             appInsights: environment.connections.appInsights,
@@ -37,31 +39,41 @@ Core.initialize(Config.from({
     }
 }));
 
-const CONNECTION_STRING = environment.connections.blobStorage;
-const containerName = environment.blobContainerName;
-const azureStorageClient: StorageClient = Core.getStorageClient();
+// Initiate the storage client for storage related functions
+const theStorageClient: StorageClient = Core.getStorageClient();
 
 
+/**
+ * Tests the storage functions for fetching 
+ * the list of files and their mimetypes
+ */
 async function testStorage() {
 
-    const azureContainerClient: StorageContainer = await azureStorageClient.getContainer(containerName);
-    const filesList: FileEntity[] = await azureContainerClient.listFiles();
+    const containerName = environment.blobContainerName;
+    const theContainerClient: StorageContainer = await theStorageClient.getContainer(containerName);
+    const filesList: FileEntity[] = await theContainerClient.listFiles();
 
     filesList.forEach(async (singleFile) => {
         console.log(singleFile.fileName);
         console.log(singleFile.mimeType);
     });
 
-
 }
 
+/**
+ * Tests the storage upload
+ */
 async function testStorageUpload() {
-    const azureContainerClient: StorageContainer = await azureStorageClient.getContainer(containerName);
-    const testFile = azureContainerClient.createFile('sample-file3.txt', 'text/plain');
+    const containerName = environment.blobContainerName;
+    const theContainerClient: StorageContainer = await theStorageClient.getContainer(containerName);
+    const testFile = theContainerClient.createFile('sample-file3.txt', 'text/plain');
     const readStream = fs.createReadStream(path.join(__dirname, "assets/sample_upload_file.txt"));
     testFile.upload(readStream);
 }
 
+/**
+ * Tests the model
+ */
 function testModel() {
     const singleMessage: SampleModel = SampleModel.from(sm);
 
@@ -70,6 +82,9 @@ function testModel() {
 }
 
 
+/**
+ * Tests the sending and receiving of messages
+ */
 function testQueues() {
 
     let tdeiLogger = Core.getLogger();
@@ -88,6 +103,9 @@ function testQueues() {
     tdeiLogger.sendAll();
 }
 
+/**
+ * Tests recording of logs
+ */
 function testLogs() {
     let tdeiLogger = Core.getLogger();
     console.log("Sample event");
