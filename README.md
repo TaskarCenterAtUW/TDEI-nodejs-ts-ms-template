@@ -100,39 +100,51 @@ The application is a simple derivative of [koa](https://koajs.com) to serve `htt
 
 This project also includes `nodets-ms-core` package to communicate with cloud for storage, queues, logs, configurations etc. 
 
+## Configuration
+The initial configuration can be done via a .env file followed by loading the variables of the same.
+An example .env file is shown below
+
+
+```shell
+# Provider information. Only two options available Azure and Local
+# Defaults to Azure if not provided
+PROVIDER=Azure 
+
+# Connection string to queue. 
+# Optional. Logger functionality for Azure may not work 
+# if not provided
+QUEUECONNECTION=
+# connection string to Azure storage if the provider is Azure
+# Same can be used for root folder in Local provider
+STORAGECONNECTION=
+# Name of the queue that the logger writes to.
+# This is optional and defaults value tdei-ms-log
+LOGGERQUEUE=
+
+```
+Once the `.env` file is set, use `dotenv` package to get the details into the code.
+
+```ts
+require('dotenv').config();
+
+```
+
+
 ## Core
 Contains all the abstract and Cloud implementation classes for connecting to Cloud components. Before using any of the components, call the initialize 
 method of `Core` to initialize the cloud components. 
 
 eg.
 ```typescript
-Core.initialize(
-    Config.from({
-    provider: 'Azure', // Keep this as Azure only
-    cloudConfig: {
-        connectionString: {
-            appInsights: <connection string for AppInsights>,
-            serviceBus: <connection string for ServiceBus>,
-            blobStorage: <connection string for BlobStorage>
-        },
-
-    }
-})
-);
+Core.initialize();
 
 ```
 You can also use `environment` file to have the configuration stored appropriately throughout the project
 eg.
 ```typescript
 export const environment = {
-    connections:{
-        serviceBus: "<connection string for ServiceBus>",
-        blobStorage:"<connection string for BlobStorage>",
-        appInsights:"<connection string for AppInsights>"
-    },
-    // Additional configuration as per need for microservice
+    
     queueName:"tdei-poc-queue",
-    blobContainerName:"tdei-storage-test",
     appName: process.env.npm_package_name
 }
 ```

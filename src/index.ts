@@ -6,10 +6,8 @@ import Koa, { Middleware, ParameterizedContext } from "koa";
 import Router from 'koa-router';
 import json from "koa-json";
 import bodyparser from "koa-body-parser";
-import { environment } from "./environment/environment";
 import {Core} from "nodets-ms-core";
-import {Config} from "nodets-ms-core/lib/models";
-// import Config from "applicationinsights/out/Library/Config";
+require('dotenv').config();
 
 const app = new Koa();
 const router = new Router();
@@ -27,17 +25,7 @@ app.use(json());
 // app.use(requestLogger());
 
 app.use(router.routes()).use(router.allowedMethods());
-Core.initialize(Config.from({
-    provider:'Azure',
-    cloudConfig:{
-        connectionString:{
-            appInsights:environment.connections.appInsights,
-            serviceBus:environment.connections.serviceBus,
-            blobStorage:environment.connections.blobStorage
-        },
-        
-    }
-}));
+Core.initialize();
 const requestLogger = (): Middleware => async (
     ctx: ParameterizedContext,
     next: () => Promise<any>
@@ -82,6 +70,6 @@ app.listen(port, () => {
     console.log('Koa started');
     let duration = Date.now() - start;
     let logger = Core.getLogger();
-    logger.recordMetric("server startup time "+process.env.npm_package_name,duration);
-    logger.sendAll();
+    // logger.recordMetric("server startup time "+process.env.npm_package_name,duration);
+    // logger.sendAll();
 });
