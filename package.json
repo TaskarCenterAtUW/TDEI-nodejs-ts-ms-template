@@ -23,7 +23,7 @@
     "typescript": "^4.8.2"
   },
   "dependencies": {
-    "nodets-ms-core":"0.0.3",
+    "nodets-ms-core":"0.0.4",
     "date-fns": "^2.29.2",
     "koa": "^2.13.4",
     "koa-body-parser": "^1.1.2",

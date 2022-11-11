@@ -4,12 +4,7 @@
  * a required parameter since it is auto imported in the `tdei_logger.ts`
  */
 export const environment = {
-    connections:{
-        serviceBus: "XXXX",
-        blobStorage:"XXXX",
-        appInsights:"XXXX"
-    },
     queueName:"tdei-poc-queue",
-    blobContainerName:"tdei-storage-test",
+    storageContainerName:"tdei-storage-test",
     appName: process.env.npm_package_name
 }

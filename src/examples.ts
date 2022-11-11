@@ -7,7 +7,6 @@ import sm from './assets/sample_message.json';
 import { QueueMessage } from "nodets-ms-core/lib/core/queue";
 import { SampleQueueHandler } from "./sample_queue_handler";
 import { environment } from "./environment/environment";
-import { Config } from "nodets-ms-core/lib/models";
 
 /**
  * Sample Model class to test the domain entities
@@ -27,20 +26,10 @@ class SampleModel extends AbstractDomainEntity {
 }
 
 // Configure the core initially
-Core.initialize(Config.from({
-    provider: 'Azure', // Keep it as Azure only
-    cloudConfig: {
-        connectionString: {
-            appInsights: environment.connections.appInsights,
-            serviceBus: environment.connections.serviceBus,
-            blobStorage: environment.connections.blobStorage
-        },
-
-    }
-}));
+Core.initialize();
 
 // Initiate the storage client for storage related functions
-const theStorageClient: StorageClient = Core.getStorageClient();
+const theStorageClient: StorageClient | null = Core.getStorageClient(null);
 
 
 /**
@@ -49,8 +38,8 @@ const theStorageClient: StorageClient = Core.getStorageClient();
  */
 async function testStorage() {
 
-    const containerName = environment.blobContainerName;
-    const theContainerClient: StorageContainer = await theStorageClient.getContainer(containerName);
+    const containerName = environment.storageContainerName;
+    const theContainerClient: StorageContainer = await theStorageClient!.getContainer(containerName);
     const filesList: FileEntity[] = await theContainerClient.listFiles();
 
     filesList.forEach(async (singleFile) => {
@@ -64,8 +53,8 @@ async function testStorage() {
  * Tests the storage upload
  */
 async function testStorageUpload() {
-    const containerName = environment.blobContainerName;
-    const theContainerClient: StorageContainer = await theStorageClient.getContainer(containerName);
+    const containerName = environment.storageContainerName;
+    const theContainerClient: StorageContainer = await theStorageClient!.getContainer(containerName);
     const testFile = theContainerClient.createFile('sample-file3.txt', 'text/plain');
     const readStream = fs.createReadStream(path.join(__dirname, "assets/sample_upload_file.txt"));
     testFile.upload(readStream);
