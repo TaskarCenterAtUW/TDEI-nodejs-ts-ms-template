@@ -25,6 +25,8 @@ class SampleModel extends AbstractDomainEntity {
 
 }
 
+require('dotenv').config();
+
 // Configure the core initially
 Core.initialize();
 
@@ -102,6 +104,41 @@ function testLogs() {
     tdeiLogger.sendAll();
 
 }
+
+function processMessage(message:QueueMessage) {
+    console.log("Received Message");
+    // return Promise.resolve();
+}
+
+function processError(error: any){
+    console.log("Received error");
+    // return Promise.reject();
+}
+
+async function testTopics(){
+    const topic = "gtfs-flex-upload";
+const subscription = "uploadprocessor";
+const topicObject = Core.getTopic(topic);
+
+topicObject.subscribe(subscription,{
+    onReceive:processMessage,
+    onError:processError
+});
+
+
+
+topicObject.publish(QueueMessage.from(
+    {
+        message:"Hello there"
+    }
+));
+
+
+
+}
+
+// use this for testing the topics code
+// testTopics();
 // Use any of the below functions to test each module of the package
 // Test the logs
 // testLogs();
