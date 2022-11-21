@@ -6,5 +6,7 @@
 export const environment = {
     queueName:"tdei-poc-queue",
     storageContainerName:"tdei-storage-test",
-    appName: process.env.npm_package_name
+    appName: process.env.npm_package_name,
+    topic: 'gtfs-flex-upload',
+    
 }
