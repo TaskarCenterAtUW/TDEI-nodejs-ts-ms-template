@@ -301,6 +301,65 @@ sampleQueueHandler.listen(); // Start listening to the queue.
 ```
 The above class instance will listen to the `sampleevent` message type and is called whenever the queue receives a message of `sampleevent` type.
 
+
+### Topic
+Topic is an advanced version of Queue where the messages are published and subscribed. Each message published to a topic can be subscribed 
+by multiple parties for their own analysis and purpose. The messages sent and received via a topic will still be of type `QueueMessage`
+
+The configuration required by Queue and Topic is similar and will be handled via a connection string.
+
+### Accessing a specific topic
+
+Topic can be accessed by the core method `getTopic`. This method takes two parameters 
+1. topic name (required)
+2. configuration (derived from IQueueConfig)
+```typescript
+const topic = Core.getTopic('topicName');
+// Alternative
+const topicConfig = new AzureQueueConfig(); // Need to modify this somehow.
+
+topicConfig.connectionString = "connectionString";
+
+const topicObject = Core.getTopic(topicConfig,topic);
+
+```
+
+### Publishing message to topic
+
+Once the topic object is got, use `publish` method to publish the message to topic. 
+```typescript
+topicObject.publish(QueueMessage.from(
+    {
+        message:"Test message"
+    }
+));
+
+```
+
+### Subscribing to topic
+An active subscription will listening to a subscription over the topic. This is achieved by using `subscribe` method of `Topic`.
+It takes two parameters
+1. subscription name
+2. handler interface object (for when message is received and when there is an error)
+
+```typescript
+
+function processMessage(message:QueueMessage) {
+    console.log("Received Message");
+    console.log(message);
+}
+
+function processError(error: any){
+    console.log("Received error");
+}
+
+topicObject.subscribe(subscription,{
+    onReceive:processMessage,
+    onError:processError
+});
+
+```
+
 ### Storage
 For all the Storage blobs and other storages, storage components will offer simple ways to upload/download and read the existing data.
 ```typescript
