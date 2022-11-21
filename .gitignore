@@ -166,3 +166,4 @@ tsconfig.nx-tmp
 #dependencies
 .npmrc
 /node_modules
+/build

@@ -6,6 +6,9 @@ import express, { Express, Request, Response } from 'express';
 
 
 import {Core} from "nodets-ms-core";
+import { AzureStorageConfig } from 'nodets-ms-core/lib/core/storage/providers/azure/azure_storage_config';
+
+
 require('dotenv').config();
 
 const app =  express();
@@ -23,6 +26,22 @@ app.get('/',(req:Request, res:Response)=>{
 });
 app.get('/ping',(req:Request, res: Response)=>{
     res.send(JSON.stringify({msg:'Ping Successfull'}));
+});
+
+app.get('/downloadTest', async (req:Request, res:Response) =>{
+    const config = AzureStorageConfig.default();
+    config.connectionString = "DefaultEndpointsProtocol=https;AccountName=tdeisamplestorage;AccountKey=l9JSJCGq9NrXqRVKApSk1wwV27aWaOVuxeY0NWOZz2svIlJzyncr3UFTzLoAanFbmJIeb2WmwIcS+AStj5gELg==;EndpointSuffix=core.windows.net";
+    const storageClient = Core.getStorageClient(config);
+    const storageContainer = await storageClient?.getContainer('gtfspathways');
+    const filesList = await storageContainer?.listFiles();
+    console.log(filesList);
+    const firstFile = filesList![0];
+    // Give this one for download
+    console.log(firstFile.fileName);
+    res.attachment(firstFile.fileName);
+    const stream = await firstFile.getStream();
+    stream.pipe(res);
+    
 });
 // app.use(bodyparser());
 // app.use(json());
@@ -82,7 +101,7 @@ const port = process.env.PORT ?? 3000;
 app.listen(port, () => {
     console.log('Express started');
     let duration = Date.now() - start;
-    let logger = Core.getLogger();
+    // let logger = Core.getLogger();
     // logger.recordMetric("server startup time "+process.env.npm_package_name,duration);
     // logger.sendAll();
 });
