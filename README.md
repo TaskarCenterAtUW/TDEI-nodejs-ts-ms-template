@@ -96,7 +96,7 @@ The following scripts will help in creating the start methods. Ensure that start
 3. To run your custom code, use the command `npm run start`
 
 # nodets-ms-core package Structure and components
-The application is a simple derivative of [koa](https://koajs.com) to serve `http` requests. By default, the `bodyParser` and `json` parser are added to the application.
+The application is a simple derivative of [ExpressJS](https://expressjs.com/) to serve `http` requests. By default, the `bodyParser` and `json` parser are added to the application.
 
 This project also includes `nodets-ms-core` package to communicate with cloud for storage, queues, logs, configurations etc. 
 
