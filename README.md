@@ -16,8 +16,15 @@ There are two ways to start a new project:
 ### With this template code
 1. Clone the repository.
 2. Remove the `.git` files using the command `rm -rf .git`
-3. Add your custom code to `index.ts`
-4. Add additional code and folders as necessary.
+3. Add a file named `.env` to the root folder. command to use: `touch .env` 
+4. `.env` file is where one would add the connection strings for storage, queue, topic, and logger. Depending one the needs of the service, one needs to add one or more of the following:
+    * PROVIDER= (default: local) 
+    * QUEUECONNECTION=
+    * STORAGECONNECTION=
+    * LOGGERQUEUE=
+5. Contact TDEI admin or GS team to get the connection strings  
+6. Add your custom code to `index.ts`
+7. Add additional code and folders as necessary.
 
 #### Build and Test
 Follow the steps to install the node packages required for both building and running the application
