@@ -17,11 +17,10 @@ There are two ways to start a new project:
 1. Clone the repository.
 2. Remove the `.git` files using the command `rm -rf .git`
 3. Add a file named `.env` to the root folder. command to use: `touch .env` 
-4. `.env` file is where one would add the connection strings for storage, queue, topic, and logger. Depending one the needs of the service, one needs to add one or more of the following:
+4. `.env` file is where one would add the connection strings for storage, queue, topic. Depending one the needs of the service, one needs to add one or more of the following:
     * PROVIDER= (default: local) 
     * QUEUECONNECTION=
     * STORAGECONNECTION=
-    * LOGGERQUEUE=
 5. Contact TDEI admin or GS team to get the connection strings  
 6. Add your custom code to `index.ts`
 7. Add additional code and folders as necessary.
@@ -117,16 +116,14 @@ An example .env file is shown below
 # Defaults to Azure if not provided
 PROVIDER=Azure 
 
-# Connection string to queue. 
-# Optional. Logger functionality for Azure may not work 
+# Connection string to service bus. 
+# This parameter is required if the service uses ServiceBus for incoming and outgoing message processing
+# using Queues or Topics
 # if not provided
 QUEUECONNECTION=
 # connection string to Azure storage if the provider is Azure
 # Same can be used for root folder in Local provider
 STORAGECONNECTION=
-# Name of the queue that the logger writes to.
-# This is optional and defaults value tdei-ms-log
-LOGGERQUEUE=
 
 ```
 Once the `.env` file is set, use `dotenv` package to get the details into the code.
@@ -155,33 +152,6 @@ export const environment = {
     appName: process.env.npm_package_name
 }
 ```
-
-### Logger
-Offers helper classes to help log the information.
-Use `Core.getLogger()` to log the following
-
-`metric`    : Any specific metric that needs to be recorded
-
-`request` : App HTTP request that needs to be logged (for response time, path, method and other information)
-
-Eg.
-```typescript
-import { Core } from 'nodets-ms-core/lib/core';
-
-let tdeiLogger = Core.getLogger();
-
-// Record a metric
-tdeiLogger.recordMetric('userlogin',1); // Metric and value
-
-// Record a request
-tdeiLogger.recordRequest(request,response);
-
-```
-Note:
-
-* All the `debug`, `info`, `warn`, `error` logs can be logged with `console` and will be injected into appInsight traces.
-* All the requests of the application can be logged by using `requestLogger` (check `index.ts`). This acts as a middleware for logging all the requests
-
 
 ### Model
 Offers easy ways to define and parse the model classes from the JSON based input received from either HTTP request or from the queue message. This acts as the base for defining all the models. `AbstractDomainEntity` can be subclassed and used for all the models used within the project. This combined with `Prop()` decorator will make it easy for modelling.

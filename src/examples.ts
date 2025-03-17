@@ -78,7 +78,6 @@ function testModel() {
  */
 function testQueues() {
 
-    let tdeiLogger = Core.getLogger();
 
     const queueName = environment.queueName;
     const queueHandler = Core.getCustomQueue<SampleQueueHandler>(queueName, SampleQueueHandler);
@@ -91,19 +90,8 @@ function testQueues() {
     }
     queueHandler.send();
 
-    tdeiLogger.sendAll();
 }
 
-/**
- * Tests recording of logs
- */
-function testLogs() {
-    let tdeiLogger = Core.getLogger();
-    console.log("Sample event");
-    tdeiLogger.recordMetric('user-upload-gtfs', 1);
-    tdeiLogger.sendAll();
-
-}
 
 function processMessage(message:QueueMessage) {
     console.log("Received Message");

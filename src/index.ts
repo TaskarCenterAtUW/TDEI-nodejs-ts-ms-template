@@ -40,21 +40,10 @@ app.get('/downloadTest', async (req:Request, res:Response) =>{
 
 Core.initialize();
 
-const requestLogger = (req:Request, res:Response, next) => {
-    console.log('Request start');
-    next();
-    console.log('request end');
-}
-
-app.use(requestLogger);
 
 
 const port = process.env.PORT ?? 3000;
 
 app.listen(port, () => {
     console.log('Express started');
-    let duration = Date.now() - start;
-    let logger = Core.getLogger();
-    logger.recordMetric("server startup time "+process.env.npm_package_name,duration);
-    logger.sendAll();
 });
