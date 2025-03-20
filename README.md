@@ -390,8 +390,5 @@ NOTE:
     
     All the examples are available in `examples.ts` file and can be tested independently when needed.
 
-# Common tasks
-
-## Adding additional routes to the server
 
 
