@@ -3,28 +3,32 @@
  */
 
 import express, { Express, Request, Response } from 'express';
-
-
 import {Core} from "nodets-ms-core";
 
 
+// Load the environment variables
 require('dotenv').config();
 
+// Create the express app
 const app =  express();
 
-let start = Date.now();
+// Define the routes
 
-
+// Base route
 app.get('/',(req:Request, res:Response)=>{
     res.send(JSON.stringify({msg:"Hello there"}));
 });
+
+// Ping route
 app.get('/ping',(req:Request, res: Response)=>{
     res.format({json () {
         res.send({msg:'Ping Successfull'})
       }});
 });
 
+// Route to test the download of file from the storage
 app.get('/downloadTest', async (req:Request, res:Response) =>{
+    
     const storageClient = Core.getStorageClient();
     const storageContainer = await storageClient?.getContainer('gtfspathways');
     const filesList = await storageContainer?.listFiles();
@@ -38,10 +42,11 @@ app.get('/downloadTest', async (req:Request, res:Response) =>{
     
 });
 
+// Initialize the Core
 Core.initialize();
 
 
-
+// Start the express server
 const port = process.env.PORT ?? 3000;
 
 app.listen(port, () => {
